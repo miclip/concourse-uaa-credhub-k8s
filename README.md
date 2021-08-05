@@ -6,7 +6,7 @@
 2. contour
 3. UAA 
 4. Credhub with UAA oauth delegation 
-5. Concourse with UAA oauth delegation 
+5. Concourse with UAA oauth delegation and Credhub secrets management 
 
 ### Deploy
 
