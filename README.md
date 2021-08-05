@@ -60,7 +60,7 @@ jobs:
 fly login -t my-main -c https://concourse.mydomain.io -k -b -n main
 fly -t my-main sp -p hello-world -c ./hello-world.yml
 fly -t my-main unpause-pipeline -p hello-world
-fly -t miclip-main trigger-job -j hello-world/hello-world-job -w
+fly -t my-main trigger-job -j hello-world/hello-world-job -w
 ~~~
 
 Expect: 
