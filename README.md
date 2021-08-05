@@ -1,6 +1,6 @@
-# Deploy Concourse with Credhub and UAA oauth
+## Deploy Concourse with Credhub and UAA oauth
 
-## Components 
+### Components 
 
 1. cert-manager with `Let’s Encrypt` issuers
 2. contour
@@ -8,7 +8,7 @@
 4. Credhub with UAA oauth delegation 
 5. Concourse with UAA oauth delegation 
 
-## Deploy
+### Deploy
 
 ~~~sh
 git clone git@github.com:miclip/concourse-uaa-credhub-k8s.git
@@ -23,7 +23,7 @@ Deploy script will print the ingress IP/DNS that needs to be setup within extern
 
 > Note: `Let’s Encrypt` can take a while to issue certs, run `kubectl get certificates -n concourse` and they all should be READY. Have seen it take upwards of an hour. 
 
-## Test 
+### Test 
 
 Test pipeline to verify concourse credhub integration: 
 
@@ -76,6 +76,6 @@ running sh -ec echo "HELLO WORLD ${SECRET_TEST}"
 HELLO WORLD mike
 ~~~
 
-## Known Issues
+### Known Issues
 
 1. UAA authorize POST is using HTTP and you'll get an alert when authorizing the client. Still investigating...
