@@ -2,7 +2,7 @@
 
 ## Components 
 
-1. cert-manager with letsencrypt issuers
+1. cert-manager with `Let’s Encrypt` issuers
 2. contour
 3. UAA 
 4. Credhub with UAA oauth delegation 
@@ -13,12 +13,15 @@
 ~~~sh
 git clone git@github.com:miclip/concourse-uaa-credhub-k8s.git
 cd ./concourse-uaa-credhub-k8s
+
+# Update `values.yaml` with at least domain details. 
+
 ./deploy-all.sh 
 ~~~
 
-Will print the ingress IP/DNS that needs to be setup within external DNS e.g. *.ci.mydomain.io. 
+Deploy script will print the ingress IP/DNS that needs to be setup within external DNS e.g. *.ci.mydomain.io. 
 
-> Note: Letsencrypt can take a while to issue certs, run `kubectl get certificates -n concourse` and they all should be READY. Have seen it take upwards of 40 minutes. 
+> Note: `Let’s Encrypt` can take a while to issue certs, run `kubectl get certificates -n concourse` and they all should be READY. Have seen it take upwards of an hour. 
 
 ## Test 
 
