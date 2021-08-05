@@ -1,0 +1,27 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uaa
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: contour
+    ingress.kubernetes.io/force-ssl-redirect: "false"
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+    - hosts:
+      - #@ data.values.uaa.subdomain + "." + data.values.domain
+      secretName: uaa-cert
+  rules:
+  - host: #@ data.values.uaa.subdomain + "." + data.values.domain
+    http:
+      paths:
+      - backend:
+          service:
+            name: uaa
+            port:
+              number: #@ data.values.uaa.port
+        path: /
+        pathType: Prefix

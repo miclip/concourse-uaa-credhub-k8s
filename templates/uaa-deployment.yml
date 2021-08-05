@@ -1,0 +1,32 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: uaa
+  name: uaa
+spec:
+  replicas: #@ data.values.uaa.replicas
+  selector:
+    matchLabels:
+      service: uaa
+  template:
+    metadata:
+      labels:
+        service: uaa
+    spec:
+      containers:
+        - image: #@ data.values.uaa.image
+          name: uaa
+          ports:
+            - containerPort: #@ data.values.uaa.port
+          resources: {}
+          volumeMounts:
+            - mountPath: /uaa
+              name: uaa-config
+      restartPolicy: Always
+      volumes:
+        - name: uaa-config
+          secret:
+            secretName: uaa-config

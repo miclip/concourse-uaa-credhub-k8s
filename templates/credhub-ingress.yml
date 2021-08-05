@@ -1,0 +1,27 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: credhub
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/secure-backends: 'true'
+    kubernetes.io/ingress.class: contour
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+    - hosts:
+      - #@ data.values.credhub.subdomain + "." + data.values.domain
+      secretName: credhub-cert
+  rules:
+  - host: #@ data.values.credhub.subdomain + "." + data.values.domain 
+    http:
+      paths:
+      - backend:
+          service:
+            name: credhub
+            port:
+              number: #@ data.values.credhub.port
+        path: /
+        pathType: Prefix

@@ -1,0 +1,15 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: credhub
+  name: credhub
+spec:
+  ports:
+    - name: "credhub-port"
+      port: #@ data.values.credhub.port
+      targetPort: #@ data.values.credhub.port
+  selector:
+    service: credhub

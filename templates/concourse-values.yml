@@ -1,0 +1,76 @@
+#@ load("@ytt:data", "data")
+
+image: concourse/concourse
+imageTag: "7.3.2"
+imagePullSecrets: []
+concourse:
+  web:
+    tls:
+      enabled: false
+      bindPort: 443
+    externalUrl: #@ "https://" + data.values.concourse.subdomain + "." + data.values.domain
+    localAuth:
+      enabled: false
+    baseResourceTypeDefaults: ""
+    kubernetes:
+      enabled: false
+    credhub:
+      enabled: true
+      url: #@ "https://" + data.values.credhub.subdomain + "." + data.values.domain
+      pathPrefix: /concourse
+      useCaCert: false
+      insecureSkipVerify: true
+      authenticationMode: "secrets"
+
+    auth:
+      cookieSecure: false
+      mainTeam:
+        config: ""
+        localUser: ""
+        oauth:
+          user: admin
+          group:
+      oauth:
+        enabled: true
+        displayName: UAA
+        authUrl: #@ "https://" + data.values.uaa.subdomain + "." + data.values.domain + "/uaa/oauth/authorize"
+        tokenUrl: #@ "https://" + data.values.uaa.subdomain + "." + data.values.domain + "/uaa/oauth/token"
+        userinfoUrl: #@ "https://" + data.values.uaa.subdomain + "." + data.values.domain + "/uaa/userinfo"
+        useCaCert: false
+        skipSslValidation: true
+        userIdKey: user_id
+        userNameKey: user_name
+web:
+  enabled: true
+  replicas: #@ data.values.concourse.web.replicas
+  ingress:
+    enabled: true
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt-staging
+      kubernetes.io/ingress.class: contour
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+      projectcontour.io/websocket-routes: "/"
+      kubernetes.io/tls-acme: "true"
+    tls:
+      - hosts:
+          - #@ data.values.concourse.subdomain + "." + data.values.domain
+        secretName: concourse-cert
+    hosts:
+      - #@ data.values.concourse.subdomain + "." + data.values.domain
+worker:
+  replicas: #@ data.values.concourse.worker.replicas
+persistence:
+  enabled: true
+postgresql:
+  enabled: true
+rbac:
+  create: true
+podSecurityPolicy:
+  create: false
+secrets:
+  create: true
+  credhubCaCert: #@ data.values.ca_cert
+  credhubClientId: credhub_client
+  credhubClientSecret: #@  data.values.credhub.client_secret
+  oauthClientId: concourse
+  oauthClientSecret: #@  data.values.credhub.client_secret

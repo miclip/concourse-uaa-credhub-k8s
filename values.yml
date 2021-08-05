@@ -1,0 +1,27 @@
+#@data/values
+---
+domain: ci.miclip.io
+ca_cert:
+email_address: mrfluffy@gmail.com
+uaa:
+  subdomain: uaa
+  jwt_key: 
+  jwt_pub:
+  admin_password: password
+  image: pcfseceng/uaa
+  port: 8080
+  replicas: 1
+credhub:
+  subdomain: credhub
+  password: password
+  client_secret: secret
+  replicas: 1
+  port: 9000
+  image: orangeopensource/credhub
+concourse:
+  subdomain: concourse
+  client_secret: secret
+  web: 
+    replicas: 1
+  worker:
+    replicas: 2

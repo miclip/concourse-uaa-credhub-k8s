@@ -1,0 +1,32 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: credhub
+  name: credhub
+spec:
+  replicas: #@ data.values.credhub.replicas
+  selector:
+    matchLabels:
+      service: credhub
+  template:
+    metadata:
+      labels:
+        service: credhub
+    spec:
+      containers:
+        - env:
+            - name: UAA_INTERNAL_URL
+              value: #@ "http://uaa:{}/uaa".format(data.values.uaa.port)
+            - name: UAA_URL
+              value: #@ "https://" + data.values.uaa.subdomain + "." + data.values.domain + "/uaa"
+            - name: SERVER_SSL_ENABLED
+              value: "false"
+          image: #@ data.values.credhub.image
+          name: credhub
+          ports:
+            - containerPort: #@ data.values.credhub.port
+          resources: {}
+      restartPolicy: Always

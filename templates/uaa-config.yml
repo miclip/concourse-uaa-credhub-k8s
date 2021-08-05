@@ -1,0 +1,39 @@
+#@ load("@ytt:data", "data")
+
+url: #@ "https://" + data.values.uaa.subdomain + "." + data.values.domain
+zones:
+  internal:
+    hostnames: []
+scim:
+  users:
+    - #@ "credhub|" + data.values.credhub.password + "|credhub|Credhub|User|credhub.read,credhub.write"
+    - #@ "admin|" + data.values.uaa.admin_password + "|scim.write,scim.read,openid"
+oauth:
+  clients:
+    concourse:
+      access-token-validity: 1200
+      authorized-grant-types: authorization_code,refresh_token
+      override: true
+      redirect-uri: #@ "https://" + data.values.concourse.subdomain + "." + data.values.domain + "/sky/issuer/callback"
+      refresh-token-validity: 3600
+      scope: openid,email,profile,roles
+      secret: #@ data.values.concourse.client_secret
+    credhub_cli:
+      override: true
+      authorized-grant-types: password,refresh_token
+      scope: credhub.read,credhub.write
+      authorities: uaa.resource
+      access-token-validity: 86400 
+      refresh-token-validity: 172800 
+      secret: "" 
+    credhub_client:
+      override: true
+      authorized-grant-types: client_credentials
+      secret: #@ data.values.credhub.client_secret
+      scope: uaa.none
+      authorities: credhub.read,credhub.write
+      access-token-validity: 86400 
+jwt:
+  token:
+    verification-key: #@ data.values.uaa.jwt_pub
+    signing-key: #@ data.values.uaa.jwt_key
