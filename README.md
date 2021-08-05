@@ -63,7 +63,7 @@ fly -t my-main unpause-pipeline -p hello-world
 fly -t miclip-main trigger-job -j hello-world/hello-world-job -w
 ~~~
 
-Should expect: 
+Expect: 
 ~~~sh 
 started hello-world/hello-world-job #2
 
